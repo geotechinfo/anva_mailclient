@@ -1,0 +1,149 @@
+{% extends 'MailClientBundle::base.html.twig' %}
+
+{% block title %}MailClientBundle:User:createimap{% endblock %}
+
+{% block stylesheets %}
+	<link href="{{ asset('theme/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('theme/font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+    <link href="{{ asset('theme/css/plugins/iCheck/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('theme/css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('theme/css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block javascript %}
+	 <script src="{{ asset('theme/js/jquery-2.1.1.js') }}"></script>
+    <script src="{{ asset('theme/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('theme/js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('theme/js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="{{ asset('theme/js/inspinia.js') }}"></script>
+    <script src="{{ asset('theme/js/plugins/pace/pace.min.js') }}"></script>
+
+    <!-- iCheck -->
+    <script src="{{ asset('theme/js/plugins/iCheck/icheck.min.js') }}"></script>
+        <script>
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+        </script>
+{% endblock %}
+
+{% block body %}
+	<div class="row" ng-show="isMessageShow">
+		<div class="col-sm-12">
+		{% for flashMessage in app.session.flashbag.get('success') %}
+			<div class="alert alert-success">
+			<i class="fa fa-check"></i> 
+				{{ flashMessage }}
+			<a ng-click="isMessageShow=0" class="pull-right"> <i class="fa fa-times"></i> </a>
+		</div>
+		{% endfor %}
+		{% for flashMessage in app.session.flashbag.get('error') %}
+			<div class="alert alert-danger">
+			<i class="fa fa-exclamation-triangle"></i> 
+				{{ flashMessage }}
+			<a ng-click="isMessageShow=0" class="pull-right"> <i class="fa fa-times"></i> </a>
+			</div>
+		{% endfor %}
+		{% for flashMessage in app.session.flashbag.get('notice') %}
+			<div class="alert alert-warning">
+			<i class="fa fa-info-circle"></i>  
+				{{ flashMessage }}
+			<a ng-click="isMessageShow=0" class="pull-right"> <i class="fa fa-times"></i> </a>
+			</div>
+		{% endfor %} 
+		</div>
+	</div>
+	
+	<div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>IMAP Settings <small>your IMAP detail</small></h5>
+                    <div class="ibox-tools">
+                        <!--
+						<a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#">Config option 1</a>
+                            </li>
+                            <li><a href="#">Config option 2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+						-->
+                    </div>
+                </div>
+                <div class="ibox-content">
+					{% for flashMessage in app.session.flashbag.get('error') %}
+						<div class="alert alert-danger">{{ flashMessage }}</div>
+					{% endfor %}
+                    <form action="{{ path('savesettings') }}" method="post" class="form-horizontal">
+                        <div class="form-group"><label class="col-sm-2 control-label">First Name</label>
+
+                            <div class="col-sm-6"><input type="text" placeholder="First Name" id="firstName" name="firstName" value="{{imap_detail.firstName}}" class="form-control"></div>
+                        </div>
+
+						<div class="form-group"><label class="col-sm-2 control-label">Last Name</label>
+
+                            <div class="col-sm-6"><input type="text" placeholder="Last Name" id="lastName" name="lastName" value="{{imap_detail.lastName}}" class="form-control"></div>
+                        </div>
+
+						<div class="form-group"><label class="col-sm-2 control-label">Email</label>
+
+                            <div class="col-sm-6"><input type="text" placeholder="Mail" id="email" name="email" value="{{imap_detail.email}}" class="form-control"></div>
+                        </div>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">Password</label>
+
+                            <div class="col-sm-6"><input type="text" placeholder="Password" id="password" name="password" value="{{imap_detail.password}}" class="form-control"></div>
+                        </div>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">Host</label>
+
+                            <div class="col-sm-6"><input type="text" placeholder="Host" id="imapHost" name="imapHost" value="{{imap_detail.imapHost}}" class="form-control"></div>
+                        </div>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">Port</label>
+
+                            <div class="col-sm-6"><input type="text" placeholder="Port" id="imapPort" name="imapPort" value="{{imap_detail.imapPort}}" class="form-control"></div>
+                        </div>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">TLS instad of SSL?</label>
+                            <div class="col-sm-6"><input type="checkbox" name="isTls" value="1" {% if imap_detail.isTls == true %}checked{% endif %} class="i-checks" /></div>
+                        </div>
+						
+						<div class="hr-line-dashed"></div>
+						
+                        <div class="form-group"><label class="col-sm-2 control-label">Item per Page</label>
+                            <div class="col-sm-5">
+								<select name="itemPerpage" id="itemPerpage" class="form-control">
+									<option value="10" {% if imap_detail.itemPerpage == 10 %}selected{% endif %}>10</option>
+									<option value="25" {% if imap_detail.itemPerpage == 25 %}selected{% endif %}>25</option>
+									<option value="50" {% if imap_detail.itemPerpage == 50 %}selected{% endif %}>50</option>
+								</select>
+							</div>
+                        </div>
+                        
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button class="btn btn-primary" type="submit">Save changes</button>
+                            </div> 
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

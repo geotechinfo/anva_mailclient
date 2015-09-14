@@ -1,0 +1,142 @@
+{% extends 'MailClientBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    <link href="{{ asset('theme/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('theme/font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+    <link href="{{ asset('theme/css/plugins/iCheck/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('theme/css/plugins/summernote/summernote.css') }}" rel="stylesheet">
+	<link href="{{ asset('theme/css/plugins/summernote/summernote-bs3.css') }}" rel="stylesheet">
+    <link href="{{ asset('theme/css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('theme/css/style.css') }}" rel="stylesheet">
+	
+    <style type="text/css">
+	.btn-file {
+		position: relative;
+		overflow: hidden;
+	}
+	.btn-file input[type=file] {
+		position: absolute;
+		top: 0;
+		right: 0;
+		min-width: 100%;
+		min-height: 100%;
+		font-size: 100px;
+		text-align: right;
+		filter: alpha(opacity=0);
+		opacity: 0;
+		outline: none;
+		background: white;
+		cursor: inherit;
+		display: block;
+	}
+	.attachments{
+		margin: 2px;
+	}
+	</style>
+{% endblock %}
+	
+{% block javascript %}
+	<!-- Mainly scripts -->
+	<script src="{{ asset('theme/js/jquery-2.1.1.js') }}"></script>
+	<script src="{{ asset('theme/js/bootstrap.min.js') }}"></script>
+	<script src="{{ asset('theme/js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+	<script src="{{ asset('theme/js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script src="{{ asset('theme/js/inspinia.js') }}"></script>
+	<script src="{{ asset('theme/js/plugins/pace/pace.min.js') }}"></script>
+
+	<!-- iCheck -->
+	<script src="{{ asset('theme/js/plugins/iCheck/icheck.min.js') }}"></script>
+	<script>
+	$(document).ready(function(){
+		/*$('.i-checks').iCheck({
+			checkboxClass: 'icheckbox_square-green',
+			radioClass: 'iradio_square-green',
+		});*/
+		/*$('.i-checks').iCheck({
+			checkboxClass: 'icheckbox_square-green',
+			radioClass: 'iradio_square-green',
+		});
+		var icheck;
+		setInterval(function(){ 
+			icheck = $('.i-checks').iCheck({
+						checkboxClass: 'icheckbox_square-green',
+						radioClass: 'iradio_square-green',
+					});
+		}, 500);**/
+	});
+	
+	</script>
+	
+	<!-- SummerNote -->
+	<script src="{{ asset('theme/js/plugins/summernote/summernote.min.js') }}"></script>
+	<script>
+	$(document).ready(function(){
+		$('.summernote').summernote();
+		var summernote;
+		setInterval(function(){ 
+			summernote = $('.summernote').summernote();
+		}, 500);
+	});
+	</script>
+	
+	<!-- Allowed characters -->
+	<script src="{{ asset('libraries/jquery.alphanum.js') }}"></script>
+	<script>
+	$(document).ready(function(){
+		$("#mailboxNew").alphanum();
+	});
+	</script>
+{% endblock %}
+
+{% block body %}
+	<div class="middle-box text-center animated fadeInRightBig" data-ng-init="syncEverything(true);" ng-if="currentPage=='sync'">
+		<h2 class="font-bold">Loading...</h2>
+		<div class="progress">
+			<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">&nbsp;</div>
+		</div>
+	</div>
+	
+	<div class="row" ng-if="currentPage!='sync'" style="display:none;">
+		<div class="col-lg-3">
+			{{ include('MailClientBundle::Mail/Elements/folder.html.twig') }}
+		</div>
+
+		<div class="col-lg-9" ng-show="messageType!=false">
+			<div class="alert alert-warning" ng-show="messageType=='info'">
+			   <i class="fa fa-info-circle"></i> 
+			   [[ messageText ]]
+			   <a ng-click="messageType=false" class="pull-right"> <i class="fa fa-times"></i> </a>
+			</div>
+			<div class="alert alert-success" ng-show="messageType=='success'">
+				<i class="fa fa-check"></i> 
+				[[ messageText ]]
+				<a ng-click="messageType=false" class="pull-right"> <i class="fa fa-times"></i> </a>
+			</div>
+			<div class="alert alert-danger" ng-show="messageType=='error'">
+			   <i class="fa fa-exclamation-triangle"></i> 
+			   [[ messageText ]]
+			   <a ng-click="messageType=false" class="pull-right"> <i class="fa fa-times"></i> </a>
+			</div>
+		</div>
+		
+		<!-- Intermediate loading start -->
+		<div class="col-lg-9" ng-if="currentPage=='load'">
+			&nbsp;
+		</div>
+		<!-- Intermediate loading end -->
+		
+		<!-- Mail list page start -->
+		{{ include('MailClientBundle::Mail/Elements/list.html.twig') }}
+		<!-- Mail list page end -->
+		
+		<!-- Mail view page start -->		
+		{{ include('MailClientBundle::Mail/Elements/view.html.twig') }}
+		<!-- Mail view page end -->
+		
+		<!-- Mail compose page start -->
+		{{ include('MailClientBundle::Mail/Elements/compose.html.twig') }}
+		<!-- Mail compose page end -->
+	</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+<div class="col-lg-9 animated fadeInRight" ng-if="currentPage=='view'">
+	<div class="mail-box-header">
+		<div class="pull-right tooltip-demo">
+			<a class="btn btn-sm btn-info" href="javascript:;" ng-click="replyEmail()"><i class="fa fa-reply"></i> Reply</a>
+			<a class="btn btn-sm btn-primary" href="javascript:;" ng-click="forwordEmail()"><i class="fa fa-arrow-right"></i> Forward</a>
+			<button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i> Remove</button>
+		</div>
+		<h2>
+			View Message
+		</h2>
+		<div class="mail-tools tooltip-demo m-t-md">
+			<h3>
+				<span class="font-noraml">Subject: </span>[[subject]]
+			</h3>
+			<h5>
+				<span class="pull-right font-noraml">[[ timeStamp | date: "hh:mma dd-MM-yy"]]</span>
+				<span class="font-noraml">From: </span>[[from]] 
+			</h5>
+			<h5>
+				<span class="font-noraml">To: </span>[[raw_to]]
+			</h5>
+		</div>
+	</div>
+		<div class="mail-box">
+
+		<div class="mail-body" ng-bind-html="bodyHtml | sanitize">
+		</div>
+		<div class="mail-attachment" ng-controller="UploadController" ng-hide="!uploader.uploadedFiles.length">
+				
+				<p>
+					<span><i class="fa fa-paperclip"></i> attachments </span>
+				</p>
+				<div class="attachment">
+					<div class="file-box" ng-repeat="uploadedFile in uploader.uploadedFiles">
+						<div class="file">
+							<a href="[[ uploadedFile.response.tempUrl ]]" download>
+								<span class="corner"></span>
+
+								<div class="icon">
+									<i class="fa fa-file"></i>
+								</div>
+								<div class="file-name">
+									<!-- Document_2014.doc
+									<br/>
+									<small>Added: Jan 11, 2014</small> -->
+									[[ uploadedFile.response.originalName ]] ([[ uploadedFile.response.fileSize ]] Kb)
+								</div>
+							</a>
+						</div>
+					</div>
+					
+					
+					<div class="clearfix"></div>
+				</div>
+				
+		</div>
+		<div class="mail-body text-right tooltip-demo">
+			<a class="btn btn-sm btn-info" href="javascript:;" ng-click="replyEmail()"><i class="fa fa-reply"></i> Reply</a>
+			<a class="btn btn-sm btn-primary" href="javascript:;" ng-click="forwordEmail()"><i class="fa fa-arrow-right"></i> Forward</a>
+			<button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i> Remove</button>
+		</div>
+				<div class="clearfix"></div>
+		</div>
+</div>

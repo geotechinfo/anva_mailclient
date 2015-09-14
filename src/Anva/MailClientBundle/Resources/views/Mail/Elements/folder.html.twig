@@ -1,0 +1,46 @@
+<div class="ibox float-e-margins">
+	<div class="ibox-content mailbox-content">
+		<div class="file-manager">
+			<a href="javascript:;" ng-click="composeMail()" class="btn btn-block btn-primary compose-mail">Compose Mail</a>
+			<div class="space-25"></div>
+			<h5>Folders</h5>
+			<p ng-show="!mailboxList">Loading...</p>
+			
+			<ul class="folder-list m-b-md" style="padding: 0">
+				<li ng-repeat="mailboxItem in mailboxList">
+					<a ng-click="listMails(mailboxItem.address, false)">
+						<i class="fa fa-inbox "></i> [[mailboxItem.name]]
+						<span class="label label-warning pull-right" ng-show="mailboxItem.unreadNo>0">[[mailboxItem.unreadNo]]</span>
+					</a>
+				</li>
+			</ul>
+			<a href="" class="btn btn-primary btn-xs pull-right" data-toggle="modal" data-target="#createMailbox" ng-click="mailboxNew=''; mbCreateError='null';">Create new folder</a>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+</div>
+
+<div class="modal inmodal" id="createMailbox" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog">
+		<div class="modal-content animated flipInY">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Create Folder</h4>
+				<p></p>
+				<div class="alert alert-danger" style="margin-bottom:0px; text-align:left;" ng-show="mbCreateError!='null'">[[mbCreateError]]</div>
+			</div>
+			<div class="modal-body">
+				<form role="form">
+					<div class="form-group" ng-class="{true: 'has-error'}[mbCreateError!='null']">
+						<input type="text" placeholder="Enter a desired folder name" class="form-control" ng-change="mbCreateError='null'" name="mailboxNew" id="mailboxNew" ng-model="mailboxNew" ng-enter="createMailbox(mailboxNew)">
+					</div>
+				</form>
+				<span ng-show="mbCreateInit==true" class="text-info"><b class="fa fa-cog fa-spin"></b> Please wait, we are creating your folder!</span>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" ng-click="createMailbox(mailboxNew)" ng-disabled="mbCreateInit==true">Create Now</button>
+				<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>

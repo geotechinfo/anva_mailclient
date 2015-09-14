@@ -1,0 +1,68 @@
+<div class="col-lg-9 animated fadeInRight" ng-if="currentPage=='list'">
+	<div class="mail-box-header">
+		<form method="get" ng-submit="searchMails(searchString)" class="pull-right mail-search" ng-show="emailList.length>0">
+			<div class="input-group">
+				<input type="text" class="form-control input-sm" ng-model="searchString" name="search" placeholder="Search email">
+				<div class="input-group-btn">
+					<button type="submit" class="btn btn-sm btn-primary">
+						Search
+					</button>
+				</div>
+			</div>
+		</form>
+		<h2>
+			[[mailboxName]] <span ng-if="startEmail<endEmail">([[startEmail]] - [[endEmail]])</span>
+		</h2>
+		<div class="mail-tools tooltip-demo m-t-md" ng-show="emailList.length>0">
+			<div class="btn-group pull-right">
+				<button class="btn btn-white btn-sm" ng-click='previousList()' ng-disabled="!(pageNo>1)"><i class="fa fa-arrow-left"></i></button>
+				<button class="btn btn-white btn-sm" ng-click='nextList()' ng-disabled="!(pageNo<totalPage)"><i class="fa fa-arrow-right"></i></button>
+			</div>
+			<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Refresh inbox" ng-click="reloadList()"><i class="fa fa-refresh"></i> Refresh</button>
+			
+			<div class="btn-group">
+			  <button type="button" class="btn btn-white btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<i class="fa fa-eye"></i>
+			  </button>
+			  <ul class="dropdown-menu">
+				<li><a href="#" ng-click="changeFlag('set', 'Seen')">Mark as read</a></li>
+				<li><a href="#" ng-click="changeFlag('unset', 'Seen')">Mark as unread</a></li>
+			  </ul>
+			</div>
+			<div class="btn-group">
+			  <button type="button" class="btn btn-white btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<i class="fa fa-exclamation"></i>
+			  </button>
+			  <ul class="dropdown-menu">
+				<li><a href="#" ng-click="changeFlag('set', 'Flagged')">Mark as important</a></li>
+				<li><a href="#" ng-click="changeFlag('unset', 'Flagged')">Mark as not important</a></li>
+			  </ul>
+			</div>
+			<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Move to trash" ng-click='deleteEmail()'><i class="fa fa-trash-o"></i> </button>
+
+		</div>
+		
+		<div class="alert alert-info" ng-show="mailboxName==null">Fetching mailbox...</div>
+		<div class="alert alert-warning" ng-show="mailboxName!=null && emailList.length==0">No email found!</div>
+	</div>
+	<div class="mail-box table-responsive">
+		<table class="table table-hover table-mail">
+			<tbody>
+				<tr class="[[emailItem.readStat]]" ng-repeat="emailItem in emailList" bn-log-dom-creation="With" my-repeat-directive>
+					<td class="check-mail">
+						<input type="checkbox" class="i-checks" ng-click="toggleSelection(emailItem.emailUid)">
+					</td>
+					<td class="mail-ontact"><a ng-click="viewMail(emailItem.emailUid)">[[emailItem.from]]</a></td>
+					<td class="mail-subject">
+						<a ng-click="viewMail(emailItem.emailUid)">[[emailItem.subject]]</a>
+					</td>
+					<td class="">
+						<i class="fa fa-exclamation" ng-if="emailItem.flagged"></i> &nbsp;
+						<i class="fa fa-paperclip" ng-if="emailItem.hasAttachment.length != 0"></i>
+					</td>
+					<td class="text-right mail-date">[[emailItem.timeStamp | date: "hh:mma dd-MM-yy"]]</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>	
+</div>

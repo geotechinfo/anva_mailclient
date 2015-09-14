@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html ng-app="emailClient">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+    <title>{% block title %}Welcome to ANVA Email Client{% endblock %}</title>
+   
+	{% block stylesheets %}{% endblock %}
+	<!-- Toastr style -->
+	<link href="{{ asset('theme/css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
+	
+	<script src="{{ asset('theme/js/jquery-2.1.1.js') }}"></script>
+	<script src="{{ asset('libraries/angular.min.js') }}"></script>
+	
+	<link href="{{ asset('libraries/tagsInput/css/ng-tags-input.min.css') }}" rel="stylesheet">
+	<script src="{{ asset('libraries/tagsInput/js/ng-tags-input.min.js') }}"></script>
+	<script src="{{ asset('libraries/angular-file-upload/angular-file-upload.min.js') }}"></script>
+
+	<!-- AngularJS application -->
+	<script src="{{ asset('application.js') }}"></script>
+</head>
+
+<body>
+
+    <div id="wrapper" ng-controller="MailController">
+
+    {{ include('MailClientBundle::nav.html.twig') }}
+	<div id="messages" class="messages">
+		
+	</div>
+	<div id="page-wrapper" class="gray-bg">
+	<div class="row border-bottom">
+	<nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+	<div class="navbar-header">
+		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+		<form role="search" class="navbar-form-custom" ng-submit="searchMails(searchString)" ng-show="currentPage=='list' || currentPage=='view' || currentPage=='compose'">
+			<div class="form-group">
+				<input type="text" ng-model="searchString" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+			</div>
+		</form>
+	</div>
+	
+		<ul class="nav navbar-top-links navbar-right">
+			<li>
+				<span class="m-r-sm text-muted welcome-message" ng-controller="GreetingsController">[[ greetings ]]</span>
+			</li>
+
+			<li><a href="{{ path('settings') }}"><b class="fa fa-cog"></b></a></li>
+			<li>
+				<a href="{{ path('login') }}">
+					<i class="fa fa-sign-out"></i> Log out
+				</a>
+			</li>
+		</ul>
+
+	</nav>
+	</div>
+
+	<div class="wrapper wrapper-content">
+		{% block body %}{% endblock %}
+	</div>
+	<div class="footer">
+		<div class="pull-right">
+			{{imap_detail.usageQuota}} of <strong>{{imap_detail.limitQuota}}</strong> Used.
+		</div>
+		<div>
+			&copy; <strong>ANVA</strong> {{ 'now'|date('Y') }}
+		</div>
+	</div>
+
+	</div>
+	</div>
+
+	{% block javascript %}{% endblock %}
+	<!-- Toastr script -->
+	<script src="{{ asset('theme/js/plugins/toastr/toastr.min.js') }}"></script>
+</body>
+</html>

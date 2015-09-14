@@ -1,0 +1,11 @@
+mail_client:
+    resource: "@MailClientBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+#app:
+    #resource: "@AppBundle/Controller/"
+    #type:     annotation
+
+base_url:
+    pattern:  /
