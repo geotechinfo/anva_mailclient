@@ -238,13 +238,13 @@ class ImapClass {
 					foreach($mail_list as $mail_item){
 						$return_list[$mailitem_count] = new \stdClass();
 						$return_list[$mailitem_count]->emailUid = $mail_item->uid;
-						$return_list[$mailitem_count]->from = (!property_exists($mail_item, "from")) ? "" : $mail_item->from;;
+						$return_list[$mailitem_count]->from = (!property_exists($mail_item, "from")) ? "" : $mail_item->from;
 						$return_list[$mailitem_count]->readStat = ($mail_item->seen) ? "" : "unread";
 						$return_list[$mailitem_count]->timeStamp = ($mail_item->udate*1000);
-						$return_list[$mailitem_count]->subject = (!property_exists($mail_item, "subject")) ? "" : $mail_item->subject;
-						$return_list[$mailitem_count]->body = "";
 						$return_list[$mailitem_count]->hasAttachment = $this->_existAttachment($imap_handle, $mail_item->msgno);
 						$return_list[$mailitem_count]->flagged = $mail_item->flagged;
+						$return_list[$mailitem_count]->subject = (!property_exists($mail_item, "subject")) ? "" : $mail_item->subject;
+						$return_list[$mailitem_count]->body = ""; // We need to put mail body here
 						$mailitem_count++;
 					}
 				}
@@ -308,7 +308,7 @@ class ImapClass {
 				$return_list[$mailitem_count]->from = $mail_item->from;
 				$return_list[$mailitem_count]->readStat = ($mail_item->seen) ? "" : "unread";
 				$return_list[$mailitem_count]->timeStamp = ($mail_item->udate*1000);
-				$return_list[$mailitem_count]->subject = $mail_item->subject;
+				$return_list[$mailitem_count]->subject = (!property_exists($mail_item, "subject")) ? "" : $mail_item->subject;
 				$return_list[$mailitem_count]->hasAttachment = $this->_existAttachment($imap_handle, $mail_item->msgno);
 				$return_list[$mailitem_count]->flagged = $mail_item->flagged;
 				$mailitem_count++;
@@ -327,7 +327,7 @@ class ImapClass {
 	// Search mail details
 	public function searchMail($address, $searchString, $page_no=1, $item_perpage=10){
 		$imap_handle = $this->_imapHandle($address);
-		$search = 'SUBJECT "'.$searchString.'" BODY "'.$searchString.'"';
+		$search = 'SUBJECT "'.strtolower($searchString).'" BODY "'.strtolower($searchString).'"';
 		$mailbox_name = ($this->_mailboxName($address) == false) ? "Inbox" : $this->_mailboxName($address);
 
 		$imap_search = \imap_search($imap_handle, $search, SE_UID);
@@ -339,10 +339,6 @@ class ImapClass {
 
 		$email_start = ($page_no-1)*$item_perpage;
 		$email_end = $email_start+($item_perpage-1);
-		//$email_end = $email_total-($item_perpage*($page_no-1));
-		//$email_start = ($email_end <= $item_perpage) ? 1 : $email_end-($item_perpage-1);
-		
-		//$email_range = $email_start.":".$email_end;
 		$range = range($email_start, $email_end);
 
 		$email_ids = array();
@@ -369,7 +365,7 @@ class ImapClass {
 				$return_list[$mailitem_count]->from = $mail_item->from;
 				$return_list[$mailitem_count]->readStat = ($mail_item->seen) ? "" : "unread";
 				$return_list[$mailitem_count]->timeStamp = ($mail_item->udate*1000);
-				$return_list[$mailitem_count]->subject = $mail_item->subject;
+				$return_list[$mailitem_count]->subject = (!property_exists($mail_item, "subject")) ? "" : $mail_item->subject;
 				$return_list[$mailitem_count]->hasAttachment = $this->_existAttachment($imap_handle, $mail_item->msgno);
 				$return_list[$mailitem_count]->flagged = $mail_item->flagged;
 				$mailitem_count++;
@@ -423,7 +419,6 @@ class ImapClass {
 
 		$email_msgno = \imap_msgno($imap_handle, $emailuid);
 		$mail_header = \imap_headerinfo($imap_handle, $email_msgno);
-		//echo "<pre>";print_r($mail_header);
 		return array(
 			"subject"=> $mail_header->subject,
 			"body"=> $this->_getBody($emailuid, $imap_handle),
@@ -480,23 +475,22 @@ class ImapClass {
 		$part["contents.data"] = $content;
 		array_push($body, $part);
 
-		$mail = imap_mail_compose($envelope, $body);
-		//echo "<pre>";print_r($envelope);print_r($mail);die;
-		$append = imap_append($imap_handle, $address, $mail, "\\Seen");
+		$mailData = imap_mail_compose($envelope, $body);
+		if($composeType=='send'){
+			//ini_set(sendmail_from, $this->username);
+			//imap_mail($envelope["to"], $subject, $mailData);
+			//ini_restore(sendmail_from);
+			@mail($envelope["to"], $subject, $mailData);
+		}		
+		
+		$append = imap_append($imap_handle, $address, $mailData, "\\Seen");
 		$uid = false;
 		if($append){
 			$check = imap_check($imap_handle);
 			$uid=imap_uid($imap_handle,$check->Nmsgs);
-			//imap_close($imap_handle);
-		}
-		
-		if($composeType=='send'){
-			//ini_set(sendmail_from, $this->username);
-			//imap_mail($to[0]["email"], $subject, $mail);
-			//ini_restore(sendmail_from);
 		}
 		imap_close($imap_handle);
-
+		
 		return array(
 			"lastUid"=> base64_encode($uid)
 		);

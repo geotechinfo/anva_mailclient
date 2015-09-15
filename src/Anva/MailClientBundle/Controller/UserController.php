@@ -57,11 +57,11 @@ class UserController extends Controller
      */
     public function loginAction(Request $request)
     {
-		$utility_helper = $this->get('utilityHelper');
+		/*$utility_helper = $this->get('utilityHelper');
 		$imap_detail = $utility_helper->imap_detail();
         if($imap_detail){
             return $this->redirectToRoute('mailbox');
-        }
+        }*/
 		
         return $this->render('@MailClient/User/login.html.twig');
 	}

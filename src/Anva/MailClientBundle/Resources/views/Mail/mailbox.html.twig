@@ -54,17 +54,6 @@
 			checkboxClass: 'icheckbox_square-green',
 			radioClass: 'iradio_square-green',
 		});*/
-		/*$('.i-checks').iCheck({
-			checkboxClass: 'icheckbox_square-green',
-			radioClass: 'iradio_square-green',
-		});
-		var icheck;
-		setInterval(function(){ 
-			icheck = $('.i-checks').iCheck({
-						checkboxClass: 'icheckbox_square-green',
-						radioClass: 'iradio_square-green',
-					});
-		}, 500);**/
 	});
 	
 	</script>
@@ -98,7 +87,7 @@
 		</div>
 	</div>
 	
-	<div class="row" ng-if="currentPage!='sync'" style="display:none;">
+	<div class="row" ng-if="currentPage!='sync'">
 		<div class="col-lg-3">
 			{{ include('MailClientBundle::Mail/Elements/folder.html.twig') }}
 		</div>

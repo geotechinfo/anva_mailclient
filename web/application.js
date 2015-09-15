@@ -9,6 +9,7 @@ var emailClient = angular.module('emailClient',['ngTagsInput', 'angularFileUploa
 	$interpolateProvider.endSymbol(']]');
 	
 });
+
 emailClient.config(function($httpProvider) {
 	$httpProvider.defaults.useXDomain = true;
 	delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -98,7 +99,7 @@ emailClient.controller('MailController', ['$scope', '$http', 'GlobalService', fu
 				}
 				).then(
 				function(successResponse){
-					if(successResponse.data == true){
+					if(successResponse.data == 'true'){
 						$scope.listMailbox(false).then(function(){
 							$scope.mbCreateInit = false;
 							$scope.mbCreateError = "null";
@@ -328,6 +329,14 @@ emailClient.controller('MailController', ['$scope', '$http', 'GlobalService', fu
 	
 	// Send a mail
 	$scope.emailSend = function(sendType){
+		$scope.currentPage = "list";
+		if(sendType=="draft"){
+			toastr.info('We are saving mail in the draft.');
+		}else{
+			toastr.info('We are sending the mail.');
+		}
+		
+		
 		$scope.btnDisabled = true;
 		var files = [];
 		angular.forEach(GlobalService.attachments, function(value, key) {
@@ -352,11 +361,11 @@ emailClient.controller('MailController', ['$scope', '$http', 'GlobalService', fu
 				
 				$scope.listMails(null, false).then(function(){
 					if(sendType=="draft"){
-						toastr.success('Mail successfully saved in Draft.');
-					}else if(sendType=="send"){
-						toastr.success('Mail successfully sent.');
 						$scope.messageType = "success";
-						$scope.messageText = "Selected mail(s) have been moved to the trash.";
+						$scope.messageText = "Mail successfully saved in the Draft.";
+					}else if(sendType=="send"){
+						$scope.messageType = "success";
+						$scope.messageText = "Mail successfully sent.";
 					}else{
 					
 					}
@@ -416,7 +425,6 @@ emailClient.controller('ContactController', ['$scope', '$http','GlobalService',f
 	$scope.loadTags = function(query) {
 		return $http.post('getcontact/'+encodeURIComponent(query));
 	};
-	//$scope.loadTags();
 
 	$scope.tagAdded = function(tag,email_type) {
 		if(!tag.email){

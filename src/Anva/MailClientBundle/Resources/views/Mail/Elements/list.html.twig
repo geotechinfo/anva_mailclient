@@ -48,13 +48,13 @@
 	<div class="mail-box table-responsive">
 		<table class="table table-hover table-mail">
 			<tbody>
-				<tr class="[[emailItem.readStat]]" ng-repeat="emailItem in emailList" bn-log-dom-creation="With" my-repeat-directive>
+				<tr class="[[emailItem.readStat]]" ng-repeat="emailItem in emailList" my-repeat-directive>
 					<td class="check-mail">
 						<input type="checkbox" class="i-checks" ng-click="toggleSelection(emailItem.emailUid)">
 					</td>
 					<td class="mail-ontact"><a ng-click="viewMail(emailItem.emailUid)">[[emailItem.from]]</a></td>
 					<td class="mail-subject">
-						<a ng-click="viewMail(emailItem.emailUid)">[[emailItem.subject]]</a>
+						<a ng-click="viewMail(emailItem.emailUid)">[[emailItem.subject || '(No Subject)']]</a>
 					</td>
 					<td class="">
 						<i class="fa fa-exclamation" ng-if="emailItem.flagged"></i> &nbsp;

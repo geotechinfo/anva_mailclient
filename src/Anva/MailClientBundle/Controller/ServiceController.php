@@ -163,13 +163,11 @@ class ServiceController extends Controller
 			
 		foreach($imap_maillist as $imap_mail){ // Add/Update mails
 
-			// aad or update contacts
-
+			// Add or update contacts
 			$contactName = (filter_var($imap_mail->mailFrom, FILTER_VALIDATE_EMAIL) === true?'':strip_tags($imap_mail->mailFrom));
 			$pattern	=	"/(?:[a-z0-9!#$%&'*+=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/";
  			preg_match_all($pattern, $imap_mail->mailFrom, $from_emails);
-				
- 			//print_r($from_emails);//die;
+			
 			if(isset($from_emails[0][0])){
 				$contacts = $manager->getRepository('MailClientBundle:ImapContacts')->findBy(array('imapAccountId' =>$imap_detail->imapaccountId,'contactEmail'=>$from_emails[0][0]));
 				if(count($contacts)==0){
@@ -265,6 +263,11 @@ class ServiceController extends Controller
 
 		$address = ($address == "null") ? $imap_detail->address : base64_decode($address);
 		$data_set = array();
+		
+		// Here we need to check IMAP availability.
+		// If IMAP is not available then we need to fetch them from database.
+		// Otherwise we will fetch emails from IMAP.
+		
 		// Fetch IMAP mail list
 		$imap_handler = new ImapClass($imap_detail->email, $imap_detail->password);
 		$data_set = $imap_handler->listMail($address, $pageno, $imap_detail->itemPerpage);
@@ -272,21 +275,6 @@ class ServiceController extends Controller
 		$response = new Response(json_encode($data_set));
 		$response->headers->set('Content-Type', 'application/json');
 		return $response;
-
-		// Fetch datatabse mail list
-		
-		
-		/*$mail_list = $this->getDoctrine()->getRepository('MailClientBundle:ImapMail')->findBy(array('imapaccountId'=>$imap_detail->imapaccountId));
-
-		$encoders = array(new XmlEncoder(), new JsonEncoder());
-		$normalizers = array(new ObjectNormalizer());
-		$serializer = new Serializer($normalizers, $encoders);
-		$mail_data = $serializer->serialize($mail_list, 'json');
-		
-		$response = new Response($mail_data);
-		$response->headers->set('Content-Type', 'application/json');
-		return $response;
-		*/
     }
 
     /**
@@ -461,13 +449,11 @@ class ServiceController extends Controller
 		$draftbox = $statement->fetch();
 		if($mailDetails["sendType"]=='draft'){
 			$address = base64_decode($draftbox["address"]);
-			//$this->addFlash('success','Your mail has been successfully saved into draft!');
 		}else{
 			$statement = $connection->prepare("SELECT * FROM imap_mailboxes WHERE imapaccount_id = ".$imap_detail->imapaccountId." AND  name like '%Sent%' ");
 			$statement->execute();
 			$sentbox = $statement->fetch();	
 			$address = base64_decode($sentbox["address"]);
-			//$this->addFlash('success','Mail has been successfully sent');
 		}
 
 		$imap_handler = new ImapClass($imap_detail->email, $imap_detail->password);
