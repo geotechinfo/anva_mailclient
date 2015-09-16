@@ -132,9 +132,9 @@ class UserController extends Controller
 		
 		$form_params = $this->getRequest()->request->all();
 		// If details not provided
-		if(!$form_params['email'] && !$form_params['password'] && !$form_params['imapHost'] && !$form_params['imapPort'] && !$form_params['itemPerpage']){
+		if($form_params['email'] == "" || $form_params['password'] == "" || $form_params['imapHost'] == "" || $form_params['imapPort'] == "" || $form_params['itemPerpage'] == ""){
 			$this->addFlash('error', 'Please provide all IMAP details.');
-			return $this->redirectToRoute('imapsettings', $form_params);
+			return $this->redirectToRoute('settings', $form_params);
 		}
 		
 		$address = "{".$form_params['imapHost'].":".$form_params['imapPort']."/imap/ssl/novalidate-cert}";
@@ -145,7 +145,7 @@ class UserController extends Controller
 		// If IMAP details invalid
 		if(!$imap_account){
 			$this->addFlash('error', 'Please provide valid IMAP details.');
-			return $this->redirectToRoute('imapsettings', $form_params);
+			return $this->redirectToRoute('settings', $form_params);
 		}
 		
 		if($imap_detail->imapaccountId){ // Update IMAP settings

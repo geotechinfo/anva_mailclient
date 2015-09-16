@@ -37,6 +37,7 @@ emailClient.controller('GreetingsController', ['$scope', function($scope) {
 
 // Mail controller
 emailClient.controller('MailController', ['$scope', '$http', 'GlobalService', function($scope, $http, GlobalService) {
+	$scope.messageHide = 0;
 	$scope.currentPage = "sync";
 	$scope.messageType = false;
 	$scope.messageText = null;

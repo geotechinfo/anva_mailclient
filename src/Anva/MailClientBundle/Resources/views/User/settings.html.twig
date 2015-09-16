@@ -33,27 +33,27 @@
 {% endblock %}
 
 {% block body %}
-	<div class="row" ng-show="isMessageShow">
+	<div class="row" ng-show="messageHide==0">
 		<div class="col-sm-12">
 		{% for flashMessage in app.session.flashbag.get('success') %}
 			<div class="alert alert-success">
 			<i class="fa fa-check"></i> 
 				{{ flashMessage }}
-			<a ng-click="isMessageShow=0" class="pull-right"> <i class="fa fa-times"></i> </a>
+			<a ng-click="messageHide=1" class="pull-right"> <i class="fa fa-times"></i> </a>
 		</div>
 		{% endfor %}
 		{% for flashMessage in app.session.flashbag.get('error') %}
 			<div class="alert alert-danger">
 			<i class="fa fa-exclamation-triangle"></i> 
 				{{ flashMessage }}
-			<a ng-click="isMessageShow=0" class="pull-right"> <i class="fa fa-times"></i> </a>
+			<a ng-click="messageHide=1" class="pull-right"> <i class="fa fa-times"></i> </a>
 			</div>
 		{% endfor %}
 		{% for flashMessage in app.session.flashbag.get('notice') %}
 			<div class="alert alert-warning">
 			<i class="fa fa-info-circle"></i>  
 				{{ flashMessage }}
-			<a ng-click="isMessageShow=0" class="pull-right"> <i class="fa fa-times"></i> </a>
+			<a ng-click="messageHide=1" class="pull-right"> <i class="fa fa-times"></i> </a>
 			</div>
 		{% endfor %} 
 		</div>
