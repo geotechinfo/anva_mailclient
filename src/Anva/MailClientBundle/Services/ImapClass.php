@@ -19,7 +19,7 @@ class ImapClass {
 	
 	// Connect Imap server
 	private function _imapHandle($address){
-		$imap_handle = \imap_open($address, $this->username, $this->password);
+		$imap_handle = \imap_open($address, $this->username, $this->password) or imap_errors();
 		/*if(!$imap_handle) {
 			throw new \Exception('Connection error: ' . imap_last_error());
 		}*/

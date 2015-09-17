@@ -153,6 +153,14 @@ emailClient.controller('MailController', ['$scope', '$http', 'GlobalService', fu
 		});
 	};
 	
+	// Only for goto inbox
+	$scope.gotoInbox = function(){
+		$scope.searchString = '';
+		$scope.pageNo = 1;
+		$scope.address = null;
+		$scope.listMails(null, false);
+	};
+	
 	$scope.searchMails = function(searchString){ // Display maillist by search
 		if(searchString != ''){
 			$scope.searchString = searchString;

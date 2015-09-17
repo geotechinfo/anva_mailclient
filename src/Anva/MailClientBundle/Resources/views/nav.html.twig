@@ -9,7 +9,7 @@
 			<li class="active">
 				<a href="{{ path('mailbox') }}"><i class="fa fa-envelope"></i> <span class="nav-label">Mailbox </span><!--<span class="label label-warning pull-right">16/24</span>--></a>
 				<ul class="nav nav-second-level">
-					<li ng-show="currentPage=='list' || currentPage=='view' || currentPage=='compose'" ng-class="{active: currentPage=='list'}"><a href="javascript:;" ng-click="listMails(null)">Inbox</a></li>
+					<li ng-show="currentPage=='list' || currentPage=='view' || currentPage=='compose'" ng-class="{active: currentPage=='list'}"><a href="javascript:;" ng-click="gotoInbox()">Inbox</a></li>
 					<li ng-show="currentPage=='list' || currentPage=='view' || currentPage=='compose'" ng-class="{active: currentPage=='compose'}"><a href="javascript:;" ng-click="composeMail()">Compose</a></li>
 					<li><a href="{{ path('settings') }}" {% if app.request.attributes.get('_route') == 'settings' %}class="active"{% endif %}>Settings</a></li>
 				</ul>

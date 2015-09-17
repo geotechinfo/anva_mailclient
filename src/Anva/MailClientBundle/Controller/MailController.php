@@ -17,11 +17,7 @@ use Anva\MailClientBundle\Services\ImapClass;
 use Anva\MailClientBundle\Entity\ImapMailbox;
 
 class MailController extends Controller
-{
-	private $username = "geotech.informatics@gmail.com";
-	private $password = "Geo@1234";
-	private $address = "{imap.gmail.com:993/imap/ssl/novalidate-cert}";
-	
+{	
 	/**
 	 * @Route("/mailbox/{address}", defaults={"address"="inbox"}, name="mailbox")
      */
